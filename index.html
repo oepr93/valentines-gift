@@ -147,6 +147,9 @@
                 <button onclick="mostrarCosasEspeciales()">
                     <i class="fas fa-sparkles"></i> Nuestras Cosas
                 </button>
+                <button onclick="mostrarTeAmoIdiomas()">
+                    <i class="fas fa-globe-americas"></i> Te Amo en Idiomas
+                </button>
             </div>
         </div>
     </div>
@@ -772,7 +775,8 @@
                             <i class="fas fa-eye"></i>
                             <h4>Tus Ojos</h4>
                             <p>Tus ojos cuentan historias que nadie más puede leer. En ellos veo tu alegría, tu
-                                tristeza, tus sueños. Cuando me miras, siento que puedo ver directo a tu corazón. Tus
+                                tristeza, tus sueños. Cuando los veo en fotos o videos, siento que puedo ver directo a
+                                tu corazón. Tus
                                 ojos son ventanas a ese alma hermosa que tanto amo.</p>
                         </div>
 
@@ -852,6 +856,45 @@
 
     <!-- Frases flotantes de amor -->
     <div id="floating-love-messages"></div>
+
+    <!-- Sección Te Amo en Idiomas -->
+    <div id="te-amo-idiomas-section" class="hidden">
+        <div class="te-amo-content">
+            <button class="close-te-amo" onclick="cerrarTeAmoIdiomas()">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="te-amo-header">
+                <h2><i class="fas fa-globe-americas"></i> Te Amo en Todos los Idiomas del Mundo</h2>
+                <p class="te-amo-subtitle">Porque mi amor por ti trasciende fronteras, culturas e idiomas</p>
+            </div>
+
+            <div class="te-amo-canvas-container">
+                <!-- Aquí flotarán los corazones -->
+            </div>
+
+            <div class="te-amo-message">
+                <div class="message-box">
+                    <i class="fas fa-heart-circle-check"></i>
+                    <p>
+                        Sarah, si pudiera decirte "te amo" en cada idioma del planeta, lo haría. 
+                        No importa dónde estemos, qué idioma hablemos, o qué cultura nos rodee...
+                    </p>
+                    <p class="highlight-message">
+                        Mi amor por ti es <strong>universal</strong>. 💕
+                    </p>
+                    <p>
+                        Estos corazones representan que te amaría en cualquier parte del mundo, 
+                        en cualquier idioma, de cualquier forma posible.
+                    </p>
+                </div>
+            </div>
+
+            <button class="back-to-letter-btn" onclick="cerrarTeAmoIdiomas()">
+                <i class="fas fa-arrow-left"></i> Volver a tu carta
+            </button>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

@@ -206,6 +206,215 @@ function createConstellation() {
 
 }
 
+// ========== CORAZONES FLOTANTES CON "TE AMO" EN MÚLTIPLES IDIOMAS ==========
+const teAmoIdiomas = [
+    "Te amo", // Español
+    "I love you", // Inglés
+    "Je t'aime", // Francés
+    "Ti amo", // Italiano
+    "Ich liebe dich", // Alemán
+    "Eu te amo", // Portugués
+    "愛してる (Aishiteru)", // Japonés
+    "사랑해 (Saranghae)", // Coreano
+    "我爱你 (Wǒ ài nǐ)", // Chino
+    "Я люблю тебя (Ya lyublyu tebya)", // Ruso
+    "Σ'αγαπώ (S'agapo)", // Griego
+    "אני אוהב אותך (Ani ohev otakh)", // Hebreo
+    "أحبك (Uhibbuk)", // Árabe
+    "Mahal kita", // Tagalog
+    "Nakupenda", // Swahili
+    "Te iubesc", // Rumano
+    "Kocham cię", // Polaco
+    "Ik hou van jou", // Holandés
+    "Jag älskar dig", // Sueco
+    "Jeg elsker deg", // Noruego
+    "Rakastan sinua", // Finlandés
+    "Miluji tě", // Checo
+    "Szeretlek", // Húngaro
+    "Volim te", // Croata
+    "Σε αγαπώ (Se agapó)", // Griego moderno
+    "사랑합니다 (Saranghamnida)", // Coreano formal
+    "Aloha au iā 'oe", // Hawaiano
+    "Bahibak", // Árabe dialectal
+    "Main tumse pyar karta hoon", // Hindi
+    "আমি তোমায় ভালোবাসি (Ami tomay bhalobashi)" // Bengalí
+];
+
+class FloatingHeart {
+    constructor() {
+        this.x = Math.random() * window.innerWidth;
+        this.y = window.innerHeight + 100;
+        this.targetY = Math.random() * (window.innerHeight - 200) - 100;
+        this.speed = Math.random() * 2 + 1;
+        this.sway = Math.random() * 2 - 1;
+        this.size = Math.random() * 30 + 20;
+        this.opacity = 0;
+        this.fadeInSpeed = 0.02;
+        this.maxOpacity = Math.random() * 0.4 + 0.6;
+        this.text = teAmoIdiomas[Math.floor(Math.random() * teAmoIdiomas.length)];
+        this.rotation = Math.random() * 20 - 10;
+        this.element = this.createElement();
+    }
+
+    createElement() {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart-love';
+        heart.innerHTML = `
+            <div class="heart-symbol">❤️</div>
+            <div class="heart-text">${this.text}</div>
+        `;
+        heart.style.cssText = `
+            position: fixed;
+            left: ${this.x}px;
+            top: ${this.y}px;
+            font-size: ${this.size}px;
+            opacity: ${this.opacity};
+            transform: rotate(${this.rotation}deg);
+            pointer-events: none;
+            z-index: 1205;
+            text-align: center;
+            transition: opacity 0.3s ease;
+        `;
+        document.body.appendChild(heart);
+        return heart;
+    }
+
+    update() {
+        // Subir
+        this.y -= this.speed;
+        
+        // Balanceo horizontal
+        this.x += Math.sin(this.y * 0.01) * this.sway;
+        
+        // Fade in hasta llegar a la posición objetivo
+        if (this.y > this.targetY && this.opacity < this.maxOpacity) {
+            this.opacity += this.fadeInSpeed;
+        }
+        
+        // Fade out cuando pasa el objetivo
+        if (this.y < this.targetY) {
+            this.opacity -= this.fadeInSpeed * 2;
+        }
+        
+        // Actualizar posición y opacidad
+        this.element.style.left = this.x + 'px';
+        this.element.style.top = this.y + 'px';
+        this.element.style.opacity = this.opacity;
+        
+        // Retornar true si debe eliminarse
+        return this.opacity <= 0 || this.y < -100;
+    }
+
+    remove() {
+        this.element.remove();
+    }
+}
+
+let floatingHearts = [];
+let heartsAnimationId = null;
+let isHeartsActive = false;
+let heartsCreateInterval = null;
+
+function startFloatingHearts() {
+    if (isHeartsActive) return;
+    isHeartsActive = true;
+    
+    // Crear nuevos corazones periódicamente
+    heartsCreateInterval = setInterval(() => {
+        if (!isHeartsActive) {
+            clearInterval(heartsCreateInterval);
+            return;
+        }
+        
+        // Crear 2-3 corazones a la vez
+        const count = Math.random() > 0.3 ? 3 : 2;
+        for (let i = 0; i < count; i++) {
+            floatingHearts.push(new FloatingHeart());
+        }
+    }, 1200); // Cada 1.2 segundos
+    
+    // Animación de actualización
+    function animateHearts() {
+        if (!isHeartsActive) {
+            heartsAnimationId = null;
+            return;
+        }
+        
+        // Actualizar y filtrar corazones
+        floatingHearts = floatingHearts.filter(heart => {
+            const shouldRemove = heart.update();
+            if (shouldRemove) {
+                heart.remove();
+                return false;
+            }
+            return true;
+        });
+        
+        heartsAnimationId = requestAnimationFrame(animateHearts);
+    }
+    
+    animateHearts();
+}
+
+function stopFloatingHearts() {
+    isHeartsActive = false;
+    
+    // Eliminar todos los corazones
+    floatingHearts.forEach(heart => heart.remove());
+    floatingHearts = [];
+    
+    if (heartsAnimationId) {
+        cancelAnimationFrame(heartsAnimationId);
+        heartsAnimationId = null;
+    }
+    
+    if (heartsCreateInterval) {
+        clearInterval(heartsCreateInterval);
+        heartsCreateInterval = null;
+    }
+}
+
+// Función para mostrar la sección
+function mostrarTeAmoIdiomas() {
+    const loveLetter = document.getElementById('love-letter');
+    if (loveLetter) {
+        loveLetter.classList.add('hidden');
+        loveLetter.style.zIndex = '900';
+    }
+
+    setTimeout(() => {
+        const teAmoSection = document.getElementById('te-amo-idiomas-section');
+        if (teAmoSection) {
+            teAmoSection.classList.remove('hidden');
+            teAmoSection.style.zIndex = '1200';
+            
+            // Iniciar los corazones flotantes
+            startFloatingHearts();
+        }
+    }, 300);
+}
+
+// Función para cerrar la sección
+function cerrarTeAmoIdiomas() {
+    const teAmoSection = document.getElementById('te-amo-idiomas-section');
+    if (teAmoSection) {
+        teAmoSection.classList.add('hidden');
+        teAmoSection.style.zIndex = '900';
+    }
+    
+    // Detener los corazones
+    stopFloatingHearts();
+    
+    // Volver a mostrar la carta
+    setTimeout(() => {
+        const loveLetter = document.getElementById('love-letter');
+        if (loveLetter) {
+            loveLetter.classList.remove('hidden');
+            loveLetter.style.zIndex = '1000';
+        }
+    }, 300);
+}
+
 // ========== CLASE ESTRELLA ROMÁNTICA ==========
 class Star {
     constructor() {
@@ -373,7 +582,7 @@ const razones52 = [
     "Amo que me incluyas en tus planes, aunque el mundo aún no lo sepa",
     "Tu forma de bailar cuando te sientes libre",
     "Porque eres esa oración que nunca supe cómo pedir pero siempre necesité",
-    "Amo cómo me miras cuando estoy hablando de algo que me apasiona",
+    "Amo cómo te emocionas cuando estoy hablando de algo que me apasiona",
     "Tu paciencia conmigo cuando mis miedos quieren sabotearme",
     "Porque nuestra historia no fue fácil… y aun así aquí estamos",
     "Amo que seamos Sarah y Octavio, sin máscaras, sin filtros",
@@ -912,6 +1121,7 @@ function volverACarta() {
     const reasons52 = document.getElementById('reasons-52');
     const timeCapsule = document.getElementById('time-capsule');
     const redThreadMap = document.getElementById('red-thread-map');
+    const teAmoSection = document.getElementById('te-amo-idiomas-section');
 
     if (momentsGallery) {
         momentsGallery.classList.add('hidden');
@@ -943,6 +1153,12 @@ function volverACarta() {
             const container = document.getElementById('globe-container');
             if (container) container.innerHTML = '';
         }, 500); // Espera a que termine la animación de cierre
+    }
+
+    if (teAmoSection) {
+        teAmoSection.classList.add('hidden');
+        teAmoSection.style.zIndex = '900';
+        stopFloatingHearts(); // Detener corazones si estaban activos
     }
 
     setTimeout(() => {
@@ -1272,7 +1488,7 @@ const cartasData = [
             Un infinito por cada vez que, a pesar del miedo, me eliges<br>
             y yo, sin dudarlo, vuelvo a elegirte a ti.<br>
             Un infinito por cada versión futura de nosotros<br>que todavía no existe,<br>
-            pero que ya late en nuestra forma de mirarnos.</p>
+            pero que ya late en nuestra forma de reconocernos.</p>
 
             <p>Porque este amor —nuestro amor—<br>
             no es una promesa vacía, ni una esperanza ciega.<br>
@@ -1345,7 +1561,7 @@ const cartasData = [
             <p>Yo conozco a la mujer cuya sonrisa no nace de un like,<br>
             sino de una alegría honesta.<br>
             Conozco esos ojos profundos donde se pueden ver universos enteros<br>
-            cuando me mira con intensidad.</p>
+            cuando me ves con intensidad.</p>
 
             <p>Y quiero agradecerle por eso.<br>
             Gracias por permitirme descubrirte.<br>
@@ -1512,6 +1728,7 @@ volverACarta = function () {
     const heartGallery = document.getElementById('heart-photo-gallery');
     const lettersSection = document.getElementById('letters-poems-section');
     const specialThings = document.getElementById('special-things-section');
+    const teAmoSection = document.getElementById('te-amo-idiomas-section');
 
     if (heartGallery) {
         heartGallery.classList.add('hidden');
@@ -1526,6 +1743,12 @@ volverACarta = function () {
     if (specialThings) {
         specialThings.classList.add('hidden');
         specialThings.style.zIndex = '900';
+    }
+
+    if (teAmoSection) {
+        teAmoSection.classList.add('hidden');
+        teAmoSection.style.zIndex = '900';
+        stopFloatingHearts(); // Detener corazones
     }
 
     volverACartaOriginal();
