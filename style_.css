@@ -2680,20 +2680,30 @@ html {
 
 /* ========== RESPONSIVE PARA NUEVAS SECCIONES ========== */
 @media (max-width: 768px) {
-    /* PLAN B: Ocultar completamente contador y relojes en móvil */
-    .side-hearts {
-        display: none !important;
+    .side-heart {
+        padding: 15px;
+        font-size: 0.9rem;
     }
 
-    #days-counter {
-        display: none !important;
+    .left-heart {
+        left: 10px;
     }
 
-    /* Ajustar botón de constelación */
+    .right-heart {
+        right: 10px;
+    }
+
+    .heart-initial {
+        font-size: 2rem;
+    }
+
+    .heart-time {
+        font-size: 0.9rem;
+    }
+
     #constellation-toggle {
         top: 10px;
         left: 10px;
-        z-index: 10000;
     }
 
     .toggle-btn {
@@ -2701,65 +2711,17 @@ html {
         font-size: 0.9rem;
     }
 
-    /* Carta principal - sin padding extra, diseño limpio */
-    #love-letter {
-        padding: 20px 10px;
-    }
-
-    .letter-content {
-        padding: 20px 15px;
-        max-width: 95%;
-        margin-top: 60px; /* Espacio para botón de constelación */
-    }
-
-    .letter-content h1 {
-        font-size: 2rem;
-    }
-
-    .letter-body {
-        font-size: 1rem;
-    }
-
-    .letter-actions {
-        grid-template-columns: 1fr;
-        gap: 10px;
-        margin-top: 20px;
-    }
-
-    .letter-actions button {
-        padding: 12px 20px;
-        font-size: 0.95rem;
-    }
-
-    /* Ajustar galería de fotos */
     .heart-photo-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
-        padding: 10px;
-        max-width: 100%;
-    }
-
-    .photo-spot {
-        aspect-ratio: auto;
-        height: 180px;
     }
 
     .heart-tip {
         grid-column: 1 / -1;
-        height: 200px;
     }
 
-    /* Ajustar biblioteca de estrellas */
     .stars-library {
         grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    /* Ajustar sección de cosas especiales */
-    .things-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-        padding: 10px;
     }
 
     .together-challenges {
@@ -2768,98 +2730,6 @@ html {
 
     .love-reasons-deep {
         gap: 20px;
-    }
-
-    /* Ajustar línea de tiempo */
-    .timeline-item {
-        padding-left: 40px;
-    }
-
-    .timeline-icon {
-        left: -10px;
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
-    }
-
-    /* Ajustar 52 razones */
-    .cards-52-content {
-        padding: 20px 10px;
-    }
-
-    .card-front, .card-back {
-        padding: 30px 20px;
-    }
-
-    /* Ajustar promesas */
-    .promises-container {
-        padding: 10px;
-    }
-
-    .envelope-card {
-        min-height: 200px;
-    }
-
-    /* Ajustar cápsula del tiempo */
-    .messages-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    /* Todas las secciones principales */
-    #moments-gallery,
-    #promises-container,
-    #reasons-52,
-    #time-capsule,
-    #red-thread-map,
-    #heart-photo-gallery,
-    #letters-poems-section,
-    #special-things-section {
-        padding: 20px 10px;
-    }
-}
-
-/* Media query adicional para pantallas muy pequeñas */
-@media (max-width: 480px) {
-    /* Carta principal */
-    .letter-content h1 {
-        font-size: 1.5rem;
-    }
-
-    .letter-content {
-        margin-top: 50px;
-    }
-
-    /* Galería de fotos */
-    .photo-spot {
-        height: 140px;
-    }
-
-    .heart-tip {
-        height: 160px;
-    }
-
-    /* 52 Razones */
-    .card-front, .card-back {
-        font-size: 0.9rem;
-        padding: 20px 15px;
-    }
-
-    #current-card-number {
-        font-size: 3rem;
-    }
-
-    #current-card-text {
-        font-size: 1rem;
-    }
-
-    /* Te Amo en Idiomas */
-    .message-box {
-        padding: 20px;
-    }
-
-    .te-amo-header h2 {
-        font-size: 1.8rem;
     }
 }
 
