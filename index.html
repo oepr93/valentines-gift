@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Para Sarah - Mi Universo</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;700&family=Sacramento&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/globe.gl"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stupendousman.github.io/VirtualSky/virtualsky.js"></script>
+</head>
+
+<body>
+    <!-- Audio suave y romántico -->
+    <audio id="valentines-song" loop>
+        <source src="./static/audio/505.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <!-- Contador de días juntos -->
+    <div id="days-counter" class="hidden">
+        <div class="counter-content">
+            <div class="counter-title">Juntos desde</div>
+            <div class="counter-date">6 de Diciembre, 2025</div>
+            <div class="counter-display">
+                <div class="counter-item">
+                    <span class="counter-number" id="days">0</span>
+                    <span class="counter-label">días</span>
+                </div>
+                <div class="counter-item">
+                    <span class="counter-number" id="hours">0</span>
+                    <span class="counter-label">horas</span>
+                </div>
+                <div class="counter-item">
+                    <span class="counter-number" id="minutes">0</span>
+                    <span class="counter-label">minutos</span>
+                </div>
+                <div class="counter-item">
+                    <span class="counter-number" id="seconds">0</span>
+                    <span class="counter-label">segundos</span>
+                </div>
+            </div>
+            <div class="counter-subtitle">❤️ Sarah y Octavio por siempre ❤️</div>
+        </div>
+    </div>
+
+    <!-- Camino de pétalos de rosas -->
+    <div id="rose-petals-container"></div>
+
+    <!-- Corazones laterales con iniciales y relojes -->
+    <div class="side-hearts">
+        <div class="side-heart left-heart">
+            <div class="heart-initial">S</div>
+            <div class="heart-location">Medellín</div>
+            <div class="heart-time" id="medellin-time">--:--</div>
+            <div class="heart-detail">🇨🇴</div>
+        </div>
+
+        <div class="side-heart right-heart">
+            <div class="heart-initial">O</div>
+            <div class="heart-location">CDMX</div>
+            <div class="heart-time" id="cdmx-time">--:--</div>
+            <div class="heart-detail">🇲🇽</div>
+        </div>
+    </div>
+
+    <!-- Corazón principal con nombre de Sarah -->
+    <div id="heart-container">
+        <div class="heart" onclick="iniciarUniverso()">
+            <div class="heart-name">Sarah</div>
+            <div class="heart-glow"></div>
+            <div class="heart-beat"></div>
+        </div>
+        <div class="heart-subtitle">Toca mi corazón</div>
+    </div>
+
+    <!-- Modo Constelación Toggle -->
+    <div id="constellation-toggle" class="hidden">
+        <button class="toggle-btn" onclick="toggleConstellationMode()">
+            <i class="fas fa-star"></i> Modo Constelación
+        </button>
+    </div>
+
+    <!-- Canvas del universo -->
+    <canvas id="universe-canvas"></canvas>
+
+    <!-- Canvas de efectos especiales -->
+    <canvas id="effects-canvas"></canvas>
+
+    <!-- Canvas de constelación -->
+    <canvas id="constellation-canvas"></canvas>
+
+    <!-- Overlay de texto romántico -->
+    <div id="love-letter" class="hidden">
+        <div class="letter-content">
+            <h1>Para Sarah, mi 505</h1>
+
+            <div class="letter-body">
+                <p>Sarah,</p>
+                <p>Cada vez que escucho "505", pienso en ti. No en un lugar, sino en ese momento perfecto donde el
+                    tiempo se detiene y solo existimos tú y yo.</p>
+
+                <div class="love-line">
+                    <span class="heart-icon">♥</span>
+                    <span>Entre tantas personas, tú me viste</span>
+                </div>
+
+                <div class="love-line">
+                    <span class="heart-icon">♥</span>
+                    <span>Eres el "siempre" en todos mis planes</span>
+                </div>
+
+                <div class="love-line">
+                    <span class="heart-icon">♥</span>
+                    <span>Eres el lugar al que siempre quiero volver</span>
+                </div>
+
+                <p class="signature">Con todo mi amor,<br>Tu Octavio</p>
+            </div>
+
+            <div class="letter-actions">
+                <button onclick="mostrarNuestrosMomentos()">
+                    <i class="fas fa-heart"></i> Nuestros Momentos
+                </button>
+                <button onclick="mostrarPromesas()">
+                    <i class="fas fa-star"></i> Mis Promesas
+                </button>
+                <button onclick="mostrar52Razones()">
+                    <i class="fas fa-cards-blank"></i> 52 Razones
+                </button>
+                <button onclick="mostrarCapsulaDelTiempo()">
+                    <i class="fas fa-hourglass-half"></i> Cápsula del Tiempo
+                </button>
+                <button onclick="mostrarHiloRojo()">
+                    <i class="fas fa-map-location-dot"></i> Nuestro Hilo Rojo
+                </button>
+                <button onclick="mostrarGaleriaCorazon()">
+                    <i class="fas fa-heart-circle-plus"></i> Nosotros en Fotos
+                </button>
+                <button onclick="mostrarCartasPoemas()">
+                    <i class="fas fa-envelope-open-text"></i> Cartas & Poemas
+                </button>
+                <button onclick="mostrarCosasEspeciales()">
+                    <i class="fas fa-sparkles"></i> Nuestras Cosas
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Galería de momentos (LÍNEA DE TIEMPO) -->
+    <div id="moments-gallery" class="hidden">
+        <div class="gallery-content timeline-container">
+            <h2><i class="fas fa-heart-pulse"></i> Nuestra Historia de Amor</h2>
+            <div class="timeline">
+                <div class="timeline-item" data-date="14 Nov 2025">
+                    <div class="timeline-icon">✨</div>
+                    <div class="timeline-content">
+                        <h3>Nos Conocimos</h3>
+                        <p>14 de Noviembre, 2025</p>
+                        <p class="timeline-description">El día que el universo conspiró para que nuestros caminos se
+                            cruzaran. Entre tantas personas, tú me viste.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item" data-date="26 Nov 2025">
+                    <div class="timeline-icon">💕</div>
+                    <div class="timeline-content">
+                        <h3>Me Dijiste "Te Amo"</h3>
+                        <p>26 de Noviembre, 2025</p>
+                        <p class="timeline-description">Las tres palabras que cambiaron mi mundo. El momento en que supe
+                            que esto era real, que no estaba solo en este sentimiento.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item" data-date="6 Dic 2025">
+                    <div class="timeline-icon">💑</div>
+                    <div class="timeline-content">
+                        <h3>Oficialmente Nuestro</h3>
+                        <p>6 de Diciembre, 2025</p>
+                        <p class="timeline-description">El día que decidimos ser Sarah y Octavio, por siempre y para
+                            siempre.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item" data-date="16 Dic 2025">
+                    <div class="timeline-icon">🎂</div>
+                    <div class="timeline-content">
+                        <h3>Tu Cumpleaños</h3>
+                        <p>16 de Diciembre, 2025</p>
+                        <p class="timeline-description">Celebrando el día en que el universo te trajo a este mundo. El
+                            mejor regalo que la vida me ha dado es conocerte.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item" data-date="24 Dic 2025">
+                    <div class="timeline-icon">⭐</div>
+                    <div class="timeline-content">
+                        <h3>Tu Estrella - Phact</h3>
+                        <p>24 de Diciembre, 2025</p>
+                        <p class="timeline-description">Te regalé una estrella porque así es como te veo: brillante,
+                            única, eterna. Phact ahora lleva tu nombre en mi corazón.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item timeline-future" data-date="Futuro">
+                    <div class="timeline-icon">♾️</div>
+                    <div class="timeline-content">
+                        <h3>Nuestro Futuro</h3>
+                        <p>Cada día que viene...</p>
+                        <p class="timeline-description">Infinitos momentos por crear, risas por compartir, sueños por
+                            cumplir. Esta es solo el comienzo de nuestra historia.</p>
+                    </div>
+                </div>
+            </div>
+            <button class="close-gallery" onclick="volverACarta()">
+                <i class="fas fa-arrow-left"></i> Volver a tu carta
+            </button>
+        </div>
+    </div>
+
+    <!-- 52 Razones por las que te amo -->
+    <div id="reasons-52" class="hidden">
+        <div class="reasons-content">
+            <h2><i class="fas fa-heart"></i> 52 Razones Por Las Que Te Amo</h2>
+            <p class="reasons-subtitle">Una razón para cada semana del año 💕</p>
+
+            <div class="card-deck-container">
+                <div class="current-card-display">
+                    <div class="card-front">
+                        <div class="card-number" id="current-card-number">1</div>
+                        <div class="card-heart">♥</div>
+                        <div class="card-text" id="current-card-text">Haz clic en "Nueva Razón" para comenzar</div>
+                    </div>
+                </div>
+
+                <div class="card-controls">
+                    <button class="card-button" onclick="mostrarNuevaRazon()">
+                        <i class="fas fa-heart-circle-plus"></i> Nueva Razón
+                    </button>
+                    <button class="card-button secondary" onclick="marcarFavorita()">
+                        <i class="fas fa-star"></i> Marcar Favorita
+                    </button>
+                </div>
+
+                <div class="cards-counter">
+                    <span id="cards-shown">0</span> / 52 razones reveladas
+                </div>
+
+                <div class="favorites-section hidden" id="favorites-section">
+                    <h3><i class="fas fa-star"></i> Tus Favoritas</h3>
+                    <div id="favorites-list"></div>
+                </div>
+            </div>
+
+            <button class="close-reasons" onclick="volverACarta()">
+                <i class="fas fa-arrow-left"></i> Volver a tu carta
+            </button>
+        </div>
+    </div>
+
+    <!-- Cápsula del Tiempo -->
+    <div id="time-capsule" class="hidden">
+        <div class="capsule-content">
+            <h2><i class="fas fa-hourglass-half"></i> Cápsula del Tiempo</h2>
+            <p class="capsule-subtitle">Mis promesas para nuestro futuro juntos</p>
+
+            <div class="capsule-messages">
+                <div class="capsule-message" onclick="abrirMensaje(this, 0)">
+                    <div class="capsule-seal">
+                        <i class="fas fa-envelope-circle-check"></i>
+                        <div class="seal-text">SELLADO CON AMOR</div>
+                    </div>
+                    <div class="capsule-info">
+                        <h3>Para Cada Día</h3>
+                        <p class="capsule-date">Todos los días de nuestra vida</p>
+                    </div>
+                </div>
+
+                <div class="capsule-message" onclick="abrirMensaje(this, 1)">
+                    <div class="capsule-seal">
+                        <i class="fas fa-envelope-circle-check"></i>
+                        <div class="seal-text">SELLADO CON AMOR</div>
+                    </div>
+                    <div class="capsule-info">
+                        <h3>En Los Días Difíciles</h3>
+                        <p class="capsule-date">Cuando el mundo te critique</p>
+                    </div>
+                </div>
+
+                <div class="capsule-message" onclick="abrirMensaje(this, 2)">
+                    <div class="capsule-seal">
+                        <i class="fas fa-envelope-circle-check"></i>
+                        <div class="seal-text">SELLADO CON AMOR</div>
+                    </div>
+                    <div class="capsule-info">
+                        <h3>Para Nuestro Futuro</h3>
+                        <p class="capsule-date">Cada momento que viene</p>
+                    </div>
+                </div>
+
+                <div class="capsule-message" onclick="abrirMensaje(this, 3)">
+                    <div class="capsule-seal">
+                        <i class="fas fa-envelope-circle-check"></i>
+                        <div class="seal-text">SELLADO CON AMOR</div>
+                    </div>
+                    <div class="capsule-info">
+                        <h3>Mi Promesa Eterna</h3>
+                        <p class="capsule-date">Por siempre y para siempre</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="close-capsule" onclick="volverACarta()">
+                <i class="fas fa-arrow-left"></i> Volver a tu carta
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal para mensajes de cápsula -->
+    <div id="capsule-modal" class="modal hidden">
+        <div class="modal-content capsule-modal-content">
+            <button class="modal-close" onclick="cerrarModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-body" id="capsule-modal-body">
+                <!-- El contenido se llenará dinámicamente -->
+            </div>
+            <div class="audio-promise-player" id="audio-player-container">
+                <h4>🎧 Escucha mi voz diciéndote esto</h4>
+                <audio controls id="promise-audio">
+                    <source src="" type="audio/mpeg">
+                    Tu navegador no soporta audio.
+                </audio>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modo Constelación Panel -->
+    <div id="constellation-mode-panel" class="hidden">
+        <div class="constellation-panel-content">
+            <button class="panel-close" onclick="cerrarConstellationMode()">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <h2><i class="fas fa-star"></i> Biblioteca de Estrellas</h2>
+            <p class="panel-subtitle">Explora las estrellas de nuestra historia</p>
+
+            <div class="stars-library">
+                <div class="star-card special-star" onclick="mostrarPhact()">
+                    <div class="star-icon">⭐</div>
+                    <h3>Phact</h3>
+                    <p>Tu Estrella</p>
+                    <div class="star-date">24 de Diciembre, 2025</div>
+                    <div class="star-badge">Especial</div>
+                </div>
+
+                <div class="star-card" onclick="mostrarMapaEstelar()">
+                    <div class="star-icon">🌌</div>
+                    <h3>Cielo Real</h3>
+                    <p>14 de Noviembre, 2025</p>
+                    <div class="star-date">Medellín, Colombia</div>
+                </div>
+
+                <div class="star-card">
+                    <div class="star-icon">✨</div>
+                    <h3>S + O</h3>
+                    <p>Nuestras Iniciales</p>
+                    <div class="star-date">Siempre brillando</div>
+                </div>
+            </div>
+
+            <div class="constellation-info">
+                <h3>Sobre Nuestra Constelación</h3>
+                <p>Esta es una representación exacta del cielo nocturno sobre Medellín, Colombia, el 14 de noviembre de
+                    2025 - la noche que nos conocimos. Las estrellas que ves formando nuestras iniciales S y O eran
+                    realmente visibles ese día desde donde tú estabas.</p>
+                <p>Entre todas esas estrellas, hay una que brilla especialmente para ti: <strong>Phact</strong>, la
+                    estrella que te regalé el 24 de diciembre.</p>
+            </div>
+
+            <div class="music-button-container">
+                <a href="https://www.youtube.com/playlist?list=TU_PLAYLIST_ID_AQUI" target="_blank"
+                    class="youtube-playlist-btn">
+                    <i class="fab fa-youtube"></i>
+                    <span>Nuestras Canciones</span>
+                </a>
+                <p class="music-subtitle">La banda sonora de nuestra historia ❤️</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel del Mapa Estelar Real (VirtualSky) -->
+    <div id="real-sky-panel" class="hidden">
+        <div class="real-sky-content">
+            <button class="panel-close" onclick="cerrarMapaEstelar()">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <h2><i class="fas fa-moon"></i> El Cielo Real de Nuestra Noche</h2>
+            <p class="panel-subtitle">14 de Noviembre, 2025 - 20:00 - Medellín, Colombia</p>
+
+            <div id="starmap-container"></div>
+
+            <div class="starmap-info">
+                <h3>💫 Nuestro Cielo Especial</h3>
+                <p>Este es el cielo EXACTO que se veía desde Medellín la noche que nos conocimos. Cada estrella, cada
+                    constelación, cada planeta estaba en esta posición precisa cuando nuestras vidas se cruzaron.</p>
+                <p><strong>Usa el mouse para explorar:</strong> Arrastra para girar el cielo, usa la rueda para hacer
+                    zoom.</p>
+            </div>
+
+            <button class="back-to-stars-btn" onclick="cerrarMapaEstelar()">
+                <i class="fas fa-arrow-left"></i> Volver a Biblioteca de Estrellas
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de Phact con Certificado -->
+    <div id="Phact-modal" class="modal hidden">
+        <div class="modal-content Phact-modal-content">
+            <button class="modal-close" onclick="cerrarPhactModal()">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="Phact-header">
+                <div class="star-animation">⭐</div>
+                <h2>Phact - Tu Estrella</h2>
+                <p class="Phact-date">24 de Diciembre, 2025</p>
+            </div>
+
+            <div class="Phact-message">
+                <p>Sarah, este día te regalé algo eterno. Una estrella que llevará tu nombre por siempre en mi corazón.
+                    Cada vez que mires al cielo nocturno, recuerda que hay una estrella que brilla solo para ti.</p>
+            </div>
+
+            <div class="certificate-container">
+                <h3><i class="fas fa-certificate"></i> Tu Certificado</h3>
+                <div class="certificate-viewer">
+                    <!-- PLACEHOLDER: Reemplaza con tu imagen del certificado -->
+                    <img src="./static/images/1.png" alt="Certificado de la Estrella Phact" id="Phact-certificate">
+                    <div class="certificate-placeholder">
+                        <i class="fas fa-file-image"></i>
+                        <p>Certificado de Phact</p>
+                    </div>
+                </div>
+                <button class="download-certificate" onclick="descargarCertificado()">
+                    <i class="fas fa-download"></i> Descargar Certificado
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Promesas de amor -->
+    <div id="promises-container" class="hidden">
+        <div class="promises-content">
+            <h2><i class="fas fa-gem"></i> Mis Promesas Para Ti</h2>
+            <div class="promises-list">
+                <div class="promise">
+                    <div class="promise-number">01</div>
+                    <div class="promise-text">
+                        <h3>Elegirte Siempre</h3>
+                        <p>En cada decisión, en cada momento, en cada día. Tú eres mi elección, mi prioridad, mi todo.
+                        </p>
+                    </div>
+                </div>
+                <div class="promise">
+                    <div class="promise-number">02</div>
+                    <div class="promise-text">
+                        <h3>Hacerte Sentir Amada</h3>
+                        <p>Que nunca dudes de mi amor. Demostrártelo en palabras y acciones, todos los días de nuestra
+                            vida.</p>
+                    </div>
+                </div>
+                <div class="promise">
+                    <div class="promise-number">03</div>
+                    <div class="promise-text">
+                        <h3>Ver Más Allá</h3>
+                        <p>Mientras el mundo ve a la mujer de la pantalla, yo veo a Sarah. Tu alma, tu esencia, la mujer
+                            increíble
+                            que eres.</p>
+                    </div>
+                </div>
+                <div class="promise">
+                    <div class="promise-number">04</div>
+                    <div class="promise-text">
+                        <h3>Ser Tu Refugio</h3>
+                        <p>En un mundo que a veces critica, seré tu lugar seguro. Donde siempre encontrarás amor, apoyo
+                            y admiración.</p>
+                    </div>
+                </div>
+            </div>
+            <button class="close-promises" onclick="volverACarta()">
+                <i class="fas fa-heart"></i> Te amo, Sarah
+            </button>
+        </div>
+    </div>
+
+    <!-- Foto especial flotante -->
+    <div id="special-photo-floating" class="hidden">
+        <div class="photo-frame-floating">
+            <img src="./static/images/photo1.gif" alt="Nuestra foto especial">
+            <div class="photo-message">
+                "Entre tantas personas, tú me viste"
+            </div>
+        </div>
+    </div>
+
+    <!-- Galería de Fotos en Forma de Corazón -->
+    <div id="heart-photo-gallery" class="hidden">
+        <div class="gallery-heart-content">
+            <h2><i class="fas fa-heart"></i> Nosotros: Unidos en un Corazón</h2>
+            <p class="gallery-subtitle">Aunque sean fotos separadas, formamos un solo corazón</p>
+
+            <div class="heart-photo-grid">
+                <!-- Top del corazón -->
+                <div class="photo-spot heart-top-left" data-position="1">
+                    <img src="./static/images/photo2.gif" alt="Foto 1">
+                    <div class="photo-placeholder">
+                        <i class="fas fa-image"></i>
+                        <small>photo1.jpg</small>
+                    </div>
+                </div>
+
+                <div class="photo-spot heart-bottom-left" data-position="2">
+                    <img src="./static/images/photo3.gif" alt="Foto 6">
+                    <div class="photo-placeholder">
+                        <i class="fas fa-image"></i>
+                        <small>photo6.jpg</small>
+                    </div>
+                </div>
+                <!-- Centro del corazón -->
+                <div class="photo-spot heart-bottom-right" data-position="3">
+                    <img src="./static/images/photo4.gif" alt="Foto 7" style="object-position: bottom center;">
+                    <div class="photo-placeholder">
+                        <i class="fas fa-image"></i>
+                        <small>photo7.jpg</small>
+                    </div>
+                </div>
+
+                <div class="photo-spot heart-center" data-position="4">
+                    <img src="./static/images/final.gif" alt="Foto 4">
+                    <div class="photo-placeholder">
+                        <i class="fas fa-image"></i>
+                        <small>photo4.jpg</small>
+                    </div>
+                </div>
+                <div class="photo-spot heart-tip" data-position="5">
+                    <img src="./static/images/photo5.jpeg" alt="Foto 5">
+                    <div class="photo-placeholder">
+                        <i class="fas fa-image"></i>
+                        <small>photo5.jpg</small>
+                    </div>
+                </div>
+                <div class="photo-spot heart-top-right" data-position="6">
+                    <img src="./static/images/photo6.jpeg" alt="Foto 2">
+                    <div class="photo-placeholder">
+                        <i class="fas fa-image"></i>
+                        <small>photo2.jpg</small>
+                    </div>
+                </div>
+                <!-- Parte baja del corazón -->
+                <div class="photo-spot heart-center-left" data-position="7">
+                    <img src="./static/images/photo7.jpeg" alt="Foto 3">
+                    <div class="photo-placeholder">
+                        <i class="fas fa-image"></i>
+                        <small>photo3.jpg</small>
+                    </div>
+                </div>
+
+
+
+                <!-- Punta del corazón -->
+                <div class="photo-spot  heart-center-right " data-position="8">
+                    <img src="./static/images/photo8.jpeg" alt="Foto 8">
+                    <div class="photo-placeholder">
+                        <i class="fas fa-image"></i>
+                        <small>photo8.jpg</small>
+                    </div>
+                </div>
+            </div>
+
+            <p class="heart-message">Tú y yo, diferentes lugares, un solo corazón ❤️</p>
+
+            <button class="close-heart-gallery" onclick="volverACarta()">
+                <i class="fas fa-arrow-left"></i> Volver a tu carta
+            </button>
+        </div>
+    </div>
+
+    <!-- Cartas y Poemas -->
+    <div id="letters-poems-section" class="hidden">
+        <div class="letters-content">
+            <h2><i class="fas fa-feather"></i> Cartas y Poemas Para Ti</h2>
+            <p class="letters-subtitle">Palabras desde mi corazón</p>
+
+            <div class="letters-grid">
+                <!-- CARTA 1 -->
+                <div class="letter-card" onclick="abrirCartaModal(0)">
+                    <div class="letter-header">
+                        <i class="fas fa-envelope-open-text"></i>
+                        <h3>Mi carta especial para ti</h3>
+                        <div class="letter-date">14 de febrero del 2026</div>
+                    </div>
+                    <div class="letter-preview">
+                        Sarah...
+                    </div>
+                </div>
+
+                <!-- CARTA 2 -->
+                <div class="letter-card" onclick="abrirCartaModal(1)">
+                    <div class="letter-header">
+                        <i class="fas fa-heart"></i>
+                        <h3>Infinito de Infinitos</h3>
+                        <div class="letter-date">14 Febrero 2026</div>
+                    </div>
+                    <div class="letter-preview">
+                        Amor mío…
+                    </div>
+                </div>
+
+                <!-- CARTA 3 -->
+                <div class="letter-card" onclick="abrirCartaModal(2)">
+                    <div class="letter-header">
+                        <i class="fas fa-quote-left"></i>
+                        <h3>¿Quién es Sarah?</h3>
+                        <div class="letter-date">Toda la eternidad</div>
+                    </div>
+                    <div class="letter-preview">
+                        El amor de mi vida
+                    </div>
+                </div>
+            </div>
+
+            <button class="close-letters" onclick="volverACarta()">
+                <i class="fas fa-arrow-left"></i> Volver a tu carta
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal para leer cartas -->
+    <div id="carta-modal" class="modal hidden">
+        <div class="modal-content carta-modal-content">
+            <div class="carta-envelope-animation">
+                <div class="envelope">
+                    <div class="envelope-flap"></div>
+                    <div class="envelope-body"></div>
+                </div>
+            </div>
+
+            <div class="carta-paper">
+                <div class="carta-header">
+                    <h2 id="carta-titulo">Título</h2>
+                    <div class="carta-date" id="carta-fecha">Fecha</div>
+                </div>
+
+                <div class="carta-body" id="carta-contenido">
+                    <!-- Contenido de la carta -->
+                </div>
+
+                <div class="carta-footer">
+                    <p class="carta-signature">Con todo mi amor, Octavio ❤️</p>
+                </div>
+            </div>
+
+            <!-- Pregunta romántica antes de cerrar -->
+            <div class="carta-question">
+                <h3 id="carta-pregunta">¿Quisieras caminar conmigo en el futuro?</h3>
+                <div class="question-buttons">
+                    <button class="answer-btn yes-btn" onclick="responderCarta('si')">
+                        <i class="fas fa-heart"></i> Sí, mi amor
+                    </button>
+                    <button class="answer-btn no-btn" onclick="responderCarta('no')">
+                        <i class="fas fa-times"></i> Cerrar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mensaje de respuesta -->
+            <div id="respuesta-mensaje" class="respuesta-mensaje hidden">
+                <div class="respuesta-content">
+                    <i class="fas fa-heart-circle-check"></i>
+                    <p id="respuesta-texto"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nuestras Cosas Especiales -->
+    <div id="special-things-section" class="hidden">
+        <div class="special-things-content">
+            <h2><i class="fas fa-sparkles"></i> Nuestras Cosas Especiales</h2>
+            <p class="things-subtitle">Las pequeñas cosas que hacen grande nuestro amor</p>
+
+            <div class="things-grid">
+                <!-- Tejido -->
+                <div class="thing-card yarn-card">
+                    <div class="thing-icon">🧶</div>
+                    <h3>Tu Amor por el Tejido</h3>
+                    <p>Cada puntada que haces, cada hilo que entrelazas, me recuerda cómo nuestras vidas se han tejido
+                        juntas. Amo ver tu pasión cuando creas algo con tus manos.</p>
+                    <div class="thing-detail">Como los hilos que tejes, nuestro amor se entrelaza fuerte</div>
+                </div>
+
+                <!-- Sushi -->
+                <div class="thing-card sushi-card">
+                    <div class="thing-icon">🍣</div>
+                    <h3>Sushi</h3>
+                    <p>Tu amor por el sushi es algo que adoro. Me encanta imaginarte disfrutando cada bocado, y sueño
+                        con el día en que podamos compartir un plato juntos.</p>
+                    <div class="thing-detail">Promesa: Te llevaré al mejor sushi de México</div>
+                </div>
+
+                <!-- Torta de Cambur -->
+                <div class="thing-card torta-card">
+                    <div class="thing-icon">🍰</div>
+                    <h3>Torta de Cambur</h3>
+                    <p>Un símbolo especial para nosotros. Representa nuestro sueño de probar las comidas de nuestros
+                        países, de compartir nuestras culturas, de estar juntos.</p>
+                    <div class="thing-detail">Colombia y México en cada bocado</div>
+                </div>
+
+                <!-- Juntos a Pesar de Todo -->
+                <div class="thing-card together-card special-highlight">
+                    <div class="thing-icon">💪</div>
+                    <h3>Juntos a Pesar de Todo</h3>
+                    <div class="together-challenges">
+                        <div class="challenge-item">
+                            <i class="fas fa-globe-americas"></i>
+                            <span>3,462 km de distancia</span>
+                        </div>
+                        <div class="challenge-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Diferencia horaria</span>
+                        </div>
+                        <div class="challenge-item">
+                            <i class="fas fa-comments"></i>
+                            <span>Críticas del mundo</span>
+                        </div>
+                        <div class="challenge-item">
+                            <i class="fas fa-heart-crack"></i>
+                            <span>Momentos difíciles</span>
+                        </div>
+                    </div>
+                    <p class="together-message">
+                        Sarah, hemos pasado por mucho. La distancia, las críticas, los momentos de duda. Pero aquí
+                        estamos, más fuertes que nunca. Porque nuestro amor es más grande que cualquier obstáculo. Te
+                        elijo cada día, a pesar de todo y gracias a todo, porque cada desafío nos hace más fuertes.
+                    </p>
+                    <div class="thing-detail highlight-text">El amor verdadero supera cualquier distancia</div>
+                </div>
+
+                <!-- Por Qué Te Amo (Alma, Ojos, Sonrisa) -->
+                <div class="thing-card soul-card special-highlight">
+                    <div class="thing-icon">✨</div>
+                    <h3>Por Qué Te Amo Verdaderamente</h3>
+                    <div class="love-reasons-deep">
+                        <div class="deep-reason">
+                            <i class="fas fa-heart"></i>
+                            <h4>Tu Alma</h4>
+                            <p>Sarah, mientras el mundo ve a la influencer exitosa, yo veo algo mucho más hermoso: tu
+                                alma. La forma en que ves el mundo, tus sueños, tus miedos, tu esencia. Eso es lo que me
+                                enamoró. Tu belleza física es innegable, pero es tu alma la que me tiene perdidamente
+                                enamorado.</p>
+                        </div>
+
+                        <div class="deep-reason">
+                            <i class="fas fa-eye"></i>
+                            <h4>Tus Ojos</h4>
+                            <p>Tus ojos cuentan historias que nadie más puede leer. En ellos veo tu alegría, tu
+                                tristeza, tus sueños. Cuando me miras, siento que puedo ver directo a tu corazón. Tus
+                                ojos son ventanas a ese alma hermosa que tanto amo.</p>
+                        </div>
+
+                        <div class="deep-reason">
+                            <i class="fas fa-smile"></i>
+                            <h4>Tu Sonrisa</h4>
+                            <p>Tu sonrisa ilumina mi mundo entero. No la sonrisa para las cámaras, sino esa sonrisa
+                                genuina cuando estás feliz, cuando te ríes de algo tonto, cuando me dices que me amas.
+                                Esa sonrisa que solo yo conozco realmente. Haría cualquier cosa por verte sonreír así
+                                cada día.</p>
+                        </div>
+                    </div>
+                    <p class="soul-final-message">
+                        Te amo por quien eres, no por cómo te ves. Te amo por tu forma de ser, por cómo me haces sentir,
+                        por cómo ves la vida. Eres importante, eres valiosa, eres vista - no por millones, sino por uno
+                        que te ve completamente. 💕
+                    </p>
+                </div>
+            </div>
+
+            <button class="close-special-things" onclick="volverACarta()">
+                <i class="fas fa-arrow-left"></i> Volver a tu carta
+            </button>
+        </div>
+    </div>
+
+    <!-- Mapa del Hilo Rojo -->
+    <div id="red-thread-map" class="hidden">
+        <div class="red-thread-content">
+            <h2><i class="fas fa-heart-circle-bolt"></i> El Hilo Rojo del Destino</h2>
+            <p class="red-thread-subtitle">"Una leyenda dice que las personas destinadas a conocerse están conectadas
+                por un hilo rojo invisible"</p>
+
+            <div class="map-container" id="globe-container">
+                <!-- Aquí se renderizará el globo 3D -->
+            </div>
+
+            <div class="red-thread-story">
+                <div class="story-section">
+                    <div class="story-icon">🧵</div>
+                    <h3>La Leyenda Oriental</h3>
+                    <p>Una antigua leyenda china cuenta que los dioses atan un hilo rojo invisible alrededor de los
+                        tobillos de aquellos que están destinados a conocerse. Sin importar el tiempo, el lugar o las
+                        circunstancias, el hilo puede estirarse o enredarse, pero nunca romperse.</p>
+                </div>
+
+                <div class="story-section">
+                    <div class="story-icon">❤️</div>
+                    <h3>Nuestro Hilo Rojo</h3>
+                    <p>3,462 kilómetros separan Ciudad de México de Medellín. Diferentes países, diferentes husos
+                        horarios, diferentes idiomas en nuestro día a día. Pero nada de eso importa, porque nuestro hilo
+                        rojo nos encontró.</p>
+                </div>
+
+                <div class="story-section">
+                    <div class="story-icon">✨</div>
+                    <h3>El 14 de Noviembre</h3>
+                    <p>Ese día, el hilo rojo se iluminó más que nunca. A través de pantallas, a través de fronteras, a
+                        través del tiempo y el espacio, nos encontramos. Y supe en ese instante que tú eras la persona
+                        al otro lado de mi hilo rojo.</p>
+                </div>
+
+                <div class="story-section highlight-section">
+                    <div class="story-icon">♾️</div>
+                    <h3>Por Siempre Unidos</h3>
+                    <p class="highlight-text">No importa la distancia física, Sarah. Nuestro hilo rojo nos mantiene
+                        conectados cada segundo. Cuando miras las estrellas desde Medellín y yo las miro desde México,
+                        estamos viendo el mismo cielo. Somos uno solo.</p>
+                </div>
+            </div>
+
+            <button class="close-red-thread" onclick="volverACarta()">
+                <i class="fas fa-arrow-left"></i> Volver a tu carta
+            </button>
+        </div>
+    </div>
+
+    <!-- Frases flotantes de amor -->
+    <div id="floating-love-messages"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
