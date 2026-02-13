@@ -524,7 +524,7 @@ const capsulaMessages = [
     {
         title: "En Los Días Difíciles",
         content: `<h3>Cuando El Mundo No Entienda</h3>
-                 <p>Mi amor, sé que como influencer muchas personas te ven, te juzgan, te critican. Pero quiero que sepas algo:</p>
+                 <p>Mi amor, sé que como modelo muchas personas te ven, te juzgan, te demandan. Pero quiero que sepas algo:</p>
                  <p><strong>Yo te admiro.</strong> Admiro tu valentía, tu autenticidad, tu fuerza para ser quien eres.</p>
                  <p>Mientras otros ven números y seguidores, yo veo a la mujer más increíble del mundo. Veo tu alma, tu corazón, tu esencia verdadera.</p>
                  <p>Cuando el mundo te critique, recuerda que tienes a alguien que te ama por quien realmente eres.</p>
