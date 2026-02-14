@@ -282,25 +282,25 @@ class FloatingHeart {
     update() {
         // Subir
         this.y -= this.speed;
-        
+
         // Balanceo horizontal
         this.x += Math.sin(this.y * 0.01) * this.sway;
-        
+
         // Fade in hasta llegar a la posición objetivo
         if (this.y > this.targetY && this.opacity < this.maxOpacity) {
             this.opacity += this.fadeInSpeed;
         }
-        
+
         // Fade out cuando pasa el objetivo
         if (this.y < this.targetY) {
             this.opacity -= this.fadeInSpeed * 2;
         }
-        
+
         // Actualizar posición y opacidad
         this.element.style.left = this.x + 'px';
         this.element.style.top = this.y + 'px';
         this.element.style.opacity = this.opacity;
-        
+
         // Retornar true si debe eliminarse
         return this.opacity <= 0 || this.y < -100;
     }
@@ -318,28 +318,28 @@ let heartsCreateInterval = null;
 function startFloatingHearts() {
     if (isHeartsActive) return;
     isHeartsActive = true;
-    
+
     // Crear nuevos corazones periódicamente
     heartsCreateInterval = setInterval(() => {
         if (!isHeartsActive) {
             clearInterval(heartsCreateInterval);
             return;
         }
-        
+
         // Crear 2-3 corazones a la vez
         const count = Math.random() > 0.3 ? 3 : 2;
         for (let i = 0; i < count; i++) {
             floatingHearts.push(new FloatingHeart());
         }
     }, 1200); // Cada 1.2 segundos
-    
+
     // Animación de actualización
     function animateHearts() {
         if (!isHeartsActive) {
             heartsAnimationId = null;
             return;
         }
-        
+
         // Actualizar y filtrar corazones
         floatingHearts = floatingHearts.filter(heart => {
             const shouldRemove = heart.update();
@@ -349,25 +349,25 @@ function startFloatingHearts() {
             }
             return true;
         });
-        
+
         heartsAnimationId = requestAnimationFrame(animateHearts);
     }
-    
+
     animateHearts();
 }
 
 function stopFloatingHearts() {
     isHeartsActive = false;
-    
+
     // Eliminar todos los corazones
     floatingHearts.forEach(heart => heart.remove());
     floatingHearts = [];
-    
+
     if (heartsAnimationId) {
         cancelAnimationFrame(heartsAnimationId);
         heartsAnimationId = null;
     }
-    
+
     if (heartsCreateInterval) {
         clearInterval(heartsCreateInterval);
         heartsCreateInterval = null;
@@ -387,7 +387,7 @@ function mostrarTeAmoIdiomas() {
         if (teAmoSection) {
             teAmoSection.classList.remove('hidden');
             teAmoSection.style.zIndex = '1200';
-            
+
             // Iniciar los corazones flotantes
             startFloatingHearts();
         }
@@ -401,10 +401,10 @@ function cerrarTeAmoIdiomas() {
         teAmoSection.classList.add('hidden');
         teAmoSection.style.zIndex = '900';
     }
-    
+
     // Detener los corazones
     stopFloatingHearts();
-    
+
     // Volver a mostrar la carta
     setTimeout(() => {
         const loveLetter = document.getElementById('love-letter');
@@ -755,7 +755,6 @@ const capsulaMessages = [
         title: "Mi Promesa Eterna",
         content: `<h3>Sarah y Octavio, Por Siempre y Para Siempre</h3>
                  <p>Entre tantas personas en este mundo, entre millones de almas, tú me viste. Y yo te vi a ti.</p>
-                 <p>No solo vi a la influencer que todos conocen. Vi más allá. Vi a Sarah.</p>
                  <p>Vi a la mujer que se ríe con todo el corazón, que sueña en grande, que ama con intensidad.</p>
                  <p>Vi a mi persona favorita. Vi al amor de mi vida.</p>
                  <p><strong>Esta es mi promesa:</strong> Verte siempre así. Ver tu alma, tu esencia, tu verdadero ser.</p>
