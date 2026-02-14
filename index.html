@@ -150,6 +150,9 @@
                 <button onclick="mostrarTeAmoIdiomas()">
                     <i class="fas fa-globe-americas"></i> Te Amo en Idiomas
                 </button>
+                <button onclick="mostrarGirasolEterno()">
+                    <i class="fas fa-sun"></i> Girasol Eterno
+                </button>
             </div>
         </div>
     </div>
@@ -386,8 +389,8 @@
             </div>
 
             <div class="music-button-container">
-                <a href="https://www.youtube.com/playlist?list=PLdf88B7JFdgEzWO8l8Wa8YYXyg_P0hOM9&jct=nIVu40NeV0VGt2x9CneudQ"
-                    target="_blank" class="youtube-playlist-btn">
+                <a href="https://www.youtube.com/playlist?list=TU_PLAYLIST_ID_AQUI" target="_blank"
+                    class="youtube-playlist-btn">
                     <i class="fab fa-youtube"></i>
                     <span>Nuestras Canciones</span>
                 </a>
@@ -891,6 +894,103 @@
             </div>
 
             <button class="back-to-letter-btn" onclick="cerrarTeAmoIdiomas()">
+                <i class="fas fa-arrow-left"></i> Volver a tu carta
+            </button>
+        </div>
+    </div>
+
+    <!-- Sección Girasol Eterno -->
+    <div id="girasol-eterno-section" class="hidden">
+        <div class="girasol-content">
+            <button class="close-girasol" onclick="cerrarGirasolEterno()">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="girasol-header">
+                <h2><i class="fas fa-sun"></i> Girasol Eterno</h2>
+                <p class="girasol-subtitle">Un símbolo de mi amor inquebrantable</p>
+            </div>
+
+            <!-- Girasol Animado -->
+            <div class="sunflower-container">
+                <div class="sunflower">
+                    <div class="sunflower-center">
+                        <div class="seeds"></div>
+                    </div>
+                    <div class="petals">
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                    </div>
+                    <div class="stem"></div>
+                    <div class="leaf leaf-left"></div>
+                    <div class="leaf leaf-right"></div>
+                </div>
+            </div>
+
+            <!-- Mensaje Romántico -->
+            <div class="girasol-message">
+                <div class="message-box-girasol">
+                    <i class="fas fa-infinity"></i>
+                    <h3>Te amaré hasta que este girasol se marchite...</h3>
+                    <p class="eternal-promise">
+                        Y como este girasol nunca se marchitará, mi amor por ti será eterno.
+                    </p>
+                    <p>
+                        Los girasoles siempre buscan la luz del sol, así como yo siempre te busco a ti.
+                        Eres mi luz, mi calor, mi razón para florecer cada día.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Reproductor de Canción Personalizada -->
+            <div class="song-player-container">
+                <div class="song-info">
+                    <i class="fas fa-music"></i>
+                    <h3>Una Canción Especial Para Ti</h3>
+                    <p class="song-description">
+                        Para tu cumpleaños, mandé a hacer esta canción solo para ti.
+                        Es única, como tú. Es especial, como lo que tenemos.
+                    </p>
+                </div>
+
+                <div class="custom-audio-player">
+                    <audio id="birthday-song" preload="metadata">
+                        <source src="./static/audio/cancion-sarah.mp3" type="audio/mpeg">
+                        Tu navegador no soporta el elemento de audio.
+                    </audio>
+
+                    <div class="player-controls">
+                        <button class="play-pause-btn" onclick="toggleBirthdaySong()">
+                            <i class="fas fa-play" id="play-icon"></i>
+                        </button>
+
+                        <div class="progress-container">
+                            <div class="time-display">
+                                <span id="current-time">0:00</span>
+                                <span id="duration-time">0:00</span>
+                            </div>
+                            <input type="range" class="progress-bar" id="progress-bar" value="0" max="100">
+                        </div>
+
+                        <div class="volume-control">
+                            <i class="fas fa-volume-up"></i>
+                            <input type="range" class="volume-bar" id="volume-bar" value="100" max="100">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="back-to-letter-btn" onclick="cerrarGirasolEterno()">
                 <i class="fas fa-arrow-left"></i> Volver a tu carta
             </button>
         </div>

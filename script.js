@@ -282,25 +282,25 @@ class FloatingHeart {
     update() {
         // Subir
         this.y -= this.speed;
-
+        
         // Balanceo horizontal
         this.x += Math.sin(this.y * 0.01) * this.sway;
-
+        
         // Fade in hasta llegar a la posición objetivo
         if (this.y > this.targetY && this.opacity < this.maxOpacity) {
             this.opacity += this.fadeInSpeed;
         }
-
+        
         // Fade out cuando pasa el objetivo
         if (this.y < this.targetY) {
             this.opacity -= this.fadeInSpeed * 2;
         }
-
+        
         // Actualizar posición y opacidad
         this.element.style.left = this.x + 'px';
         this.element.style.top = this.y + 'px';
         this.element.style.opacity = this.opacity;
-
+        
         // Retornar true si debe eliminarse
         return this.opacity <= 0 || this.y < -100;
     }
@@ -318,28 +318,28 @@ let heartsCreateInterval = null;
 function startFloatingHearts() {
     if (isHeartsActive) return;
     isHeartsActive = true;
-
+    
     // Crear nuevos corazones periódicamente
     heartsCreateInterval = setInterval(() => {
         if (!isHeartsActive) {
             clearInterval(heartsCreateInterval);
             return;
         }
-
+        
         // Crear 2-3 corazones a la vez
         const count = Math.random() > 0.3 ? 3 : 2;
         for (let i = 0; i < count; i++) {
             floatingHearts.push(new FloatingHeart());
         }
     }, 1200); // Cada 1.2 segundos
-
+    
     // Animación de actualización
     function animateHearts() {
         if (!isHeartsActive) {
             heartsAnimationId = null;
             return;
         }
-
+        
         // Actualizar y filtrar corazones
         floatingHearts = floatingHearts.filter(heart => {
             const shouldRemove = heart.update();
@@ -349,25 +349,25 @@ function startFloatingHearts() {
             }
             return true;
         });
-
+        
         heartsAnimationId = requestAnimationFrame(animateHearts);
     }
-
+    
     animateHearts();
 }
 
 function stopFloatingHearts() {
     isHeartsActive = false;
-
+    
     // Eliminar todos los corazones
     floatingHearts.forEach(heart => heart.remove());
     floatingHearts = [];
-
+    
     if (heartsAnimationId) {
         cancelAnimationFrame(heartsAnimationId);
         heartsAnimationId = null;
     }
-
+    
     if (heartsCreateInterval) {
         clearInterval(heartsCreateInterval);
         heartsCreateInterval = null;
@@ -387,7 +387,7 @@ function mostrarTeAmoIdiomas() {
         if (teAmoSection) {
             teAmoSection.classList.remove('hidden');
             teAmoSection.style.zIndex = '1200';
-
+            
             // Iniciar los corazones flotantes
             startFloatingHearts();
         }
@@ -401,10 +401,10 @@ function cerrarTeAmoIdiomas() {
         teAmoSection.classList.add('hidden');
         teAmoSection.style.zIndex = '900';
     }
-
+    
     // Detener los corazones
     stopFloatingHearts();
-
+    
     // Volver a mostrar la carta
     setTimeout(() => {
         const loveLetter = document.getElementById('love-letter');
@@ -413,6 +413,165 @@ function cerrarTeAmoIdiomas() {
             loveLetter.style.zIndex = '1000';
         }
     }, 300);
+}
+
+// ========== SISTEMA DE CONTROL DE AUDIO GLOBAL ==========
+let backgroundMusic = null;
+let wasBackgroundMusicPlaying = false;
+
+// Función para pausar la música de fondo
+function pauseBackgroundMusic() {
+    backgroundMusic = document.getElementById('valentines-song');
+    if (backgroundMusic && !backgroundMusic.paused) {
+        wasBackgroundMusicPlaying = true;
+        backgroundMusic.pause();
+    }
+}
+
+// Función para reanudar la música de fondo
+function resumeBackgroundMusic() {
+    backgroundMusic = document.getElementById('valentines-song');
+    if (backgroundMusic && wasBackgroundMusicPlaying) {
+        backgroundMusic.play().catch(e => console.log('No se pudo reanudar la música'));
+        wasBackgroundMusicPlaying = false;
+    }
+}
+
+// ========== GIRASOL ETERNO ==========
+let birthdaySongAudio = null;
+let birthdaySongPlaying = false;
+
+function mostrarGirasolEterno() {
+    const loveLetter = document.getElementById('love-letter');
+    if (loveLetter) {
+        loveLetter.classList.add('hidden');
+        loveLetter.style.zIndex = '900';
+    }
+
+    setTimeout(() => {
+        const girasolSection = document.getElementById('girasol-eterno-section');
+        if (girasolSection) {
+            girasolSection.classList.remove('hidden');
+            girasolSection.style.zIndex = '1200';
+            
+            // Inicializar el reproductor
+            initBirthdaySongPlayer();
+        }
+    }, 300);
+}
+
+function cerrarGirasolEterno() {
+    const girasolSection = document.getElementById('girasol-eterno-section');
+    if (girasolSection) {
+        girasolSection.classList.add('hidden');
+        girasolSection.style.zIndex = '900';
+    }
+    
+    // Pausar la canción si está reproduciéndose
+    if (birthdaySongAudio && !birthdaySongAudio.paused) {
+        birthdaySongAudio.pause();
+        birthdaySongPlaying = false;
+        updatePlayIcon(false);
+        resumeBackgroundMusic();
+    }
+    
+    // Volver a mostrar la carta
+    setTimeout(() => {
+        const loveLetter = document.getElementById('love-letter');
+        if (loveLetter) {
+            loveLetter.classList.remove('hidden');
+            loveLetter.style.zIndex = '1000';
+        }
+    }, 300);
+}
+
+// Inicializar reproductor de canción de cumpleaños
+function initBirthdaySongPlayer() {
+    birthdaySongAudio = document.getElementById('birthday-song');
+    const progressBar = document.getElementById('progress-bar');
+    const volumeBar = document.getElementById('volume-bar');
+    const currentTimeDisplay = document.getElementById('current-time');
+    const durationTimeDisplay = document.getElementById('duration-time');
+    
+    if (!birthdaySongAudio) return;
+    
+    // Evento cuando se carga la metadata
+    birthdaySongAudio.addEventListener('loadedmetadata', () => {
+        durationTimeDisplay.textContent = formatTime(birthdaySongAudio.duration);
+    });
+    
+    // Actualizar progreso
+    birthdaySongAudio.addEventListener('timeupdate', () => {
+        if (birthdaySongAudio.duration) {
+            const progress = (birthdaySongAudio.currentTime / birthdaySongAudio.duration) * 100;
+            progressBar.value = progress;
+            currentTimeDisplay.textContent = formatTime(birthdaySongAudio.currentTime);
+        }
+    });
+    
+    // Cuando termina la canción
+    birthdaySongAudio.addEventListener('ended', () => {
+        birthdaySongPlaying = false;
+        updatePlayIcon(false);
+        resumeBackgroundMusic();
+    });
+    
+    // Control de progreso manual
+    progressBar.addEventListener('input', (e) => {
+        const time = (e.target.value / 100) * birthdaySongAudio.duration;
+        birthdaySongAudio.currentTime = time;
+    });
+    
+    // Control de volumen
+    volumeBar.addEventListener('input', (e) => {
+        birthdaySongAudio.volume = e.target.value / 100;
+    });
+}
+
+// Toggle play/pause de la canción de cumpleaños
+function toggleBirthdaySong() {
+    if (!birthdaySongAudio) {
+        birthdaySongAudio = document.getElementById('birthday-song');
+    }
+    
+    if (!birthdaySongAudio) return;
+    
+    if (birthdaySongPlaying) {
+        birthdaySongAudio.pause();
+        birthdaySongPlaying = false;
+        updatePlayIcon(false);
+        resumeBackgroundMusic();
+    } else {
+        pauseBackgroundMusic();
+        birthdaySongAudio.play().catch(e => {
+            console.log('Error al reproducir:', e);
+            resumeBackgroundMusic();
+        });
+        birthdaySongPlaying = true;
+        updatePlayIcon(true);
+    }
+}
+
+// Actualizar icono de play/pause
+function updatePlayIcon(isPlaying) {
+    const playIcon = document.getElementById('play-icon');
+    if (playIcon) {
+        if (isPlaying) {
+            playIcon.classList.remove('fa-play');
+            playIcon.classList.add('fa-pause');
+        } else {
+            playIcon.classList.remove('fa-pause');
+            playIcon.classList.add('fa-play');
+        }
+    }
+}
+
+// Formatear tiempo (segundos a mm:ss)
+function formatTime(seconds) {
+    if (isNaN(seconds)) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
 // ========== CLASE ESTRELLA ROMÁNTICA ==========
@@ -755,6 +914,7 @@ const capsulaMessages = [
         title: "Mi Promesa Eterna",
         content: `<h3>Sarah y Octavio, Por Siempre y Para Siempre</h3>
                  <p>Entre tantas personas en este mundo, entre millones de almas, tú me viste. Y yo te vi a ti.</p>
+                 <p>No solo vi a la influencer que todos conocen. Vi más allá. Vi a Sarah.</p>
                  <p>Vi a la mujer que se ríe con todo el corazón, que sueña en grande, que ama con intensidad.</p>
                  <p>Vi a mi persona favorita. Vi al amor de mi vida.</p>
                  <p><strong>Esta es mi promesa:</strong> Verte siempre así. Ver tu alma, tu esencia, tu verdadero ser.</p>
@@ -1121,6 +1281,7 @@ function volverACarta() {
     const timeCapsule = document.getElementById('time-capsule');
     const redThreadMap = document.getElementById('red-thread-map');
     const teAmoSection = document.getElementById('te-amo-idiomas-section');
+    const girasolSection = document.getElementById('girasol-eterno-section');
 
     if (momentsGallery) {
         momentsGallery.classList.add('hidden');
@@ -1158,6 +1319,18 @@ function volverACarta() {
         teAmoSection.classList.add('hidden');
         teAmoSection.style.zIndex = '900';
         stopFloatingHearts(); // Detener corazones si estaban activos
+    }
+
+    if (girasolSection) {
+        girasolSection.classList.add('hidden');
+        girasolSection.style.zIndex = '900';
+        // Pausar canción si estaba reproduciéndose
+        if (birthdaySongAudio && !birthdaySongAudio.paused) {
+            birthdaySongAudio.pause();
+            birthdaySongPlaying = false;
+            updatePlayIcon(false);
+            resumeBackgroundMusic();
+        }
     }
 
     setTimeout(() => {
@@ -1718,8 +1891,32 @@ abrirMensaje = function (element, index) {
         audioElement.onerror = function () {
             audioContainer.classList.add('hidden');
         };
+
+        // NUEVO: Añadir control de música de fondo
+        // Remover event listeners anteriores para evitar duplicados
+        audioElement.removeEventListener('play', handlePromiseAudioPlay);
+        audioElement.removeEventListener('pause', handlePromiseAudioPause);
+        audioElement.removeEventListener('ended', handlePromiseAudioEnded);
+
+        // Añadir nuevos event listeners
+        audioElement.addEventListener('play', handlePromiseAudioPlay);
+        audioElement.addEventListener('pause', handlePromiseAudioPause);
+        audioElement.addEventListener('ended', handlePromiseAudioEnded);
     }
 };
+
+// Event handlers para audio de promesas
+function handlePromiseAudioPlay() {
+    pauseBackgroundMusic();
+}
+
+function handlePromiseAudioPause() {
+    resumeBackgroundMusic();
+}
+
+function handlePromiseAudioEnded() {
+    resumeBackgroundMusic();
+}
 
 // Actualizar volverACarta para incluir nuevas secciones
 const volverACartaOriginal = volverACarta;
@@ -1728,6 +1925,7 @@ volverACarta = function () {
     const lettersSection = document.getElementById('letters-poems-section');
     const specialThings = document.getElementById('special-things-section');
     const teAmoSection = document.getElementById('te-amo-idiomas-section');
+    const girasolSection = document.getElementById('girasol-eterno-section');
 
     if (heartGallery) {
         heartGallery.classList.add('hidden');
@@ -1748,6 +1946,18 @@ volverACarta = function () {
         teAmoSection.classList.add('hidden');
         teAmoSection.style.zIndex = '900';
         stopFloatingHearts(); // Detener corazones
+    }
+
+    if (girasolSection) {
+        girasolSection.classList.add('hidden');
+        girasolSection.style.zIndex = '900';
+        // Pausar canción
+        if (birthdaySongAudio && !birthdaySongAudio.paused) {
+            birthdaySongAudio.pause();
+            birthdaySongPlaying = false;
+            updatePlayIcon(false);
+            resumeBackgroundMusic();
+        }
     }
 
     volverACartaOriginal();
